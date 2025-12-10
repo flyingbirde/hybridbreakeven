@@ -1,34 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>PHEV — EV vs Petrol • Break-even</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<meta property="og:title" content="PHEV – EV vs Petrol Cost Calculator">
-<meta property="og:description" content="Compare €/100km and find the break-even electricity price for charging. Includes common PHEV presets.">
-<meta property="og:url" content="https://flyingbirde.github.io/hybridbreakeven/">
-<meta property="og:image" content="https://flyingbirde.github.io/hybridbreakeven/preview.png">
-<meta name="twitter:card" content="summary_large_image">
+<meta charset="utf-8">
+<title>PHEV EV vs Petrol</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 :root{
-  --bg-1:#04091a;
-  --bg-2:#051a1a;
-  --muted:#aab5e3;
-  --text:#f0f4ff;
-  --accent-a:#6ee7c6;
-  --accent-b:#6bbcff;
-  --danger:#ff6b6b;
-  --radius:16px;
+  --bg:#050b1c;
+  --card:#ffffff10;
+  --text:#f1f5ff;
+  --muted:#aab2e6;
+  --ev:#5eead4;
+  --petrol:#fb7185;
 }
 
 *{box-sizing:border-box}
-html,body{
-  height:100%;
+body{
   margin:0;
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-  background:linear-gradient(160deg,var(--bg-1),var(--bg-2));
+  font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:linear-gradient(160deg,#050b1c,#06242a);
   color:var(--text);
 }
 
@@ -42,62 +33,58 @@ html,body{
 
 .card{
   width:100%;
-  max-width:400px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-  border-radius:var(--radius);
-  padding:25px;
-  border:1px solid rgba(255,255,255,.05);
-  backdrop-filter:blur(12px) saturate(120%);
-  box-shadow:0 40px 80px rgba(2,6,23,.8);
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  max-width:420px;
+  background:var(--card);
+  border-radius:16px;
+  padding:22px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
 }
 
 h1{
-  margin:0;
   font-size:22px;
-  border-bottom:1px solid rgba(255,255,255,.1);
-  padding-bottom:8px;
+  margin:0 0 10px;
 }
 
-.chip{
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  font-size:12px;
+.lang{
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+}
+
+.lang button{
+  flex:1;
+  background:#ffffff15;
+  border:none;
+  border-radius:8px;
+  padding:6px;
+  color:var(--text);
+  cursor:pointer;
   font-weight:600;
+}
+
+.lang button.active{
+  background:var(--ev);
+  color:#052116;
 }
 
 label{
   font-size:12px;
   color:var(--muted);
-  margin-bottom:5px;
   display:block;
+  margin-bottom:4px;
 }
 
 input,select{
   width:100%;
-  padding:10px 12px;
+  padding:10px;
   border-radius:10px;
-  background:rgba(0,0,0,.25);
-  border:1px solid rgba(255,255,255,.05);
+  border:1px solid #ffffff20;
+  background:#00000040;
   color:var(--text);
-  font-size:16px;
 }
 
-input:focus,select:focus{
-  outline:none;
-  box-shadow:0 0 0 2px var(--accent-b);
-}
-
-.controls-grid{
+.grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
@@ -105,270 +92,235 @@ input:focus,select:focus{
 
 .row{margin-bottom:12px}
 
-.btn-row{
-  display:flex;
-  gap:10px;
-}
-
-button{
-  cursor:pointer;
+button.primary{
+  width:100%;
+  margin-top:6px;
+  padding:12px;
   border:none;
   border-radius:10px;
-  padding:12px 14px;
   font-weight:700;
-}
-
-button.primary{
-  flex:1;
-  background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+  background:linear-gradient(135deg,var(--ev),#60a5fa);
   color:#052116;
-}
-
-button.ghost{
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-}
-
-.summary{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+  cursor:pointer;
 }
 
 .result{
-  padding:18px;
+  margin-top:18px;
+  padding:14px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,.05);
+  border:1px solid #ffffff20;
 }
 
 .line{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
+  font-weight:600;
+  margin-bottom:8px;
 }
 
-.left{
+.bar{
+  margin-top:12px;
+}
+
+.bar-track{
+  height:16px;
+  background:#ffffff15;
+  border-radius:999px;
+  overflow:hidden;
   display:flex;
-  align-items:center;
-  gap:10px;
 }
 
-.iconBox{
-  width:30px;
-  height:30px;
-  border-radius:8px;
-  display:grid;
-  place-items:center;
-  background:rgba(255,255,255,.06);
-}
+.bar-ev{background:var(--ev)}
+.bar-petrol{background:var(--petrol)}
 
-.break-even-line{
-  margin-top:16px;
-  padding-top:16px;
-  border-top:1px dashed rgba(255,255,255,.15);
-  text-align:center;
-}
-
-.break-even-value{
-  font-size:24px;
-  font-weight:800;
-  color:var(--accent-b);
-}
-
-.final{
-  padding:14px 18px;
-  border-radius:12px;
+.bar-labels{
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.big{
+  text-align:center;
+  font-size:22px;
+  font-weight:800;
+  margin-top:12px;
+}
+
+.verdict{
+  margin-top:12px;
+  padding:10px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
   font-weight:700;
 }
-
-.verdict-ev{
-  background:linear-gradient(90deg,rgba(110,231,198,.1),rgba(107,188,255,.05));
-  border:1px solid var(--accent-a);
-  color:var(--accent-a);
-}
-
-.verdict-petrol{
-  background:linear-gradient(90deg,rgba(255,107,107,.1),rgba(255,107,107,.05));
-  border:1px solid var(--danger);
-  color:var(--danger);
-}
-
-.verdict-equal{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-}
-
-.evGood{color:var(--accent-a)}
-.petrolBad{color:var(--danger)}
-.muted{color:var(--muted);font-size:13px}
-
-@media(max-width:500px){
-  .wrap{padding:10px}
-  .card{border-radius:0}
-}
+.ev{color:var(--ev)}
+.petrol{color:var(--petrol)}
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="card" aria-label="PHEV break-even calculator">
+<div class="card">
 
-    <div class="top">
-      <h1>PHEV — EV vs Petrol</h1>
-      <div class="chip" id="lastUpdated">—</div>
-    </div>
+<h1 id="title">PHEV EV vs Petrol</h1>
 
-    <div>
-      <div class="row">
-        <label for="phev">PHEV Model</label>
-        <select id="phev"></select>
-      </div>
+<div class="lang">
+  <button onclick="setLang('en')" class="active">EN</button>
+  <button onclick="setLang('nl')">NL</button>
+  <button onclick="setLang('de')">DE</button>
+</div>
 
-      <div class="controls-grid">
-        <div class="row">
-          <label>Petrol Price (€ / L)</label>
-          <input id="petrolPrice" type="number" step="0.01" value="2.10">
-        </div>
-        <div class="row">
-          <label>Petrol Cons. (L / 100 km)</label>
-          <input id="petrolCons" type="number" step="0.1" value="7.0">
-        </div>
-        <div class="row">
-          <label>EV Cons. (kWh / 100 km)</label>
-          <input id="evCons" type="number" step="0.1" value="18.0">
-        </div>
-        <div class="row">
-          <label>Electricity Price (€ / kWh)</label>
-          <input id="elecPrice" type="number" step="0.01" value="0.35">
-        </div>
-      </div>
+<div class="row">
+  <label id="lblVehicle">Choose vehicle</label>
+  <select id="vehicle"></select>
+</div>
 
-      <div class="btn-row">
-        <button class="primary" id="updateBtn">Update</button>
-        <button class="ghost" id="resetBtn">Reset</button>
-      </div>
-    </div>
-
-    <aside class="summary">
-      <div class="result">
-        <div class="muted" style="font-weight:700;margin-bottom:12px">
-          Cost Comparison / 100 km
-        </div>
-
-        <div class="line">
-          <div class="left"><span class="iconBox">⛽</span>Petrol</div>
-          <div id="petrolCost">€0.00</div>
-        </div>
-
-        <div class="line">
-          <div class="left"><span class="iconBox">⚡</span>EV</div>
-          <div id="evCost">€0.00</div>
-        </div>
-
-        <div class="break-even-line">
-          <div class="muted">Break-even electricity price</div>
-          <div class="break-even-value">€0.000 / kWh</div>
-        </div>
-      </div>
-
-      <div class="final verdict-equal" id="verdict">
-        <div id="verdictText">—</div>
-        <div id="verdictDelta">—</div>
-      </div>
-    </aside>
-
+<div class="grid">
+  <div class="row">
+    <label id="lblDistance">Commute distance (km)</label>
+    <input id="distance" type="number" value="40">
+  </div>
+  <div class="row">
+    <label id="lblTemp">Temperature (°C)</label>
+    <input id="temp" type="range" min="-10" max="20" value="10" oninput="updateTemp()">
+    <div style="font-size:12px;color:var(--muted)" id="tempVal">10°C</div>
+  </div>
+  <div class="row">
+    <label>Petrol €/L</label>
+    <input id="petrolPrice" value="2.10">
+  </div>
+  <div class="row">
+    <label>kWh €/kWh</label>
+    <input id="elecPrice" value="0.35">
   </div>
 </div>
 
+<button class="primary" onclick="calc()">Calculate</button>
+
+<div class="result">
+  <div class="line"><span id="lblPetrol">Petrol only</span><span id="petrolCost"></span></div>
+  <div class="line"><span id="lblMixed">PHEV mixed</span><span id="mixedCost"></span></div>
+
+  <div class="bar">
+    <div class="bar-track">
+      <div class="bar-ev" id="barEV"></div>
+      <div class="bar-petrol" id="barPetrol"></div>
+    </div>
+    <div class="bar-labels">
+      <span id="evLabel"></span>
+      <span id="petrolLabel"></span>
+    </div>
+  </div>
+
+  <div class="big" id="breakEven"></div>
+
+  <div class="verdict" id="verdict"></div>
+</div>
+
+</div>
+</div>
+
 <script>
-const phevList=[
- ["Choose vehicle",7,18],
- ["Lynk & Co 01 PHEV",7.5,17.5],
- ["Volvo XC60 PHEV",7.5,18],
- ["Ford Kuga PHEV",6.8,17],
- ["Mitsubishi Outlander PHEV",7,20],
- ["Toyota RAV4 PHEV",6.2,18]
+const vehicles=[
+  ["Lynk & Co 01",7.5,17.5,69],
+  ["Volvo XC60",7.5,18,77],
+  ["Ford Kuga",6.8,17,64],
+  ["RAV4 PHEV",6.2,18,75]
 ];
 
-const qs=id=>document.getElementById(id);
-const phev=qs("phev");
-const petrolPrice=qs("petrolPrice");
-const petrolCons=qs("petrolCons");
-const evCons=qs("evCons");
-const elecPrice=qs("elecPrice");
-const petrolCost=qs("petrolCost");
-const evCost=qs("evCost");
-const verdict=qs("verdict");
-const verdictText=qs("verdictText");
-const verdictDelta=qs("verdictDelta");
-const lastUpdated=qs("lastUpdated");
-const breakEvenValue=document.querySelector(".break-even-value");
+const t={
+en:{
+ title:"PHEV EV vs Petrol",
+ vehicle:"Choose vehicle",
+ distance:"Commute distance (km)",
+ petrol:"Petrol only",
+ mixed:"PHEV mixed",
+ cheaper:"PHEV is cheaper",
+ petrolCheaper:"Petrol is cheaper"
+},
+nl:{
+ title:"PHEV EV vs Benzine",
+ vehicle:"Kies voertuig",
+ distance:"Woon-werk afstand (km)",
+ petrol:"Alleen benzine",
+ mixed:"PHEV gemengd",
+ cheaper:"PHEV is goedkoper",
+ petrolCheaper:"Benzine is goedkoper"
+},
+de:{
+ title:"PHEV EV vs Benzin",
+ vehicle:"Fahrzeug wählen",
+ distance:"Pendeldistanz (km)",
+ petrol:"Nur Benzin",
+ mixed:"PHEV gemischt",
+ cheaper:"PHEV ist günstiger",
+ petrolCheaper:"Benzin ist günstiger"
+}
+};
 
-phevList.forEach((p,i)=>{
+let lang="en";
+
+const $=id=>document.getElementById(id);
+const vehicle=$("vehicle");
+
+vehicles.forEach((v,i)=>{
   const o=document.createElement("option");
-  o.value=i;o.textContent=p[0];
-  phev.appendChild(o);
+  o.value=i;
+  o.textContent=v[0];
+  vehicle.appendChild(o);
 });
 
-phev.addEventListener("change",()=>{
-  const p=phevList[phev.value];
-  petrolCons.value=p[1];
-  evCons.value=p[2];
-  calculate();
-});
-
-const toNum=v=>Number.isFinite(+v)?+v:0;
-
-function calculate(){
-  const pp=toNum(petrolPrice.value);
-  const pc=toNum(petrolCons.value);
-  const ec=toNum(evCons.value);
-  const ep=toNum(elecPrice.value);
-
-  const petrol100=pp*pc;
-  const ev100=ep*ec;
-  const diff=petrol100-ev100;
-
-  petrolCost.textContent=`€${petrol100.toFixed(2)}`;
-  evCost.textContent=`€${ev100.toFixed(2)}`;
-  breakEvenValue.textContent=`€${(petrol100/ec).toFixed(3)} / kWh`;
-
-  verdict.className="final";
-
-  if(Math.abs(diff)<0.05){
-    verdict.classList.add("verdict-equal");
-    verdictText.textContent="Costs are roughly equal";
-    verdictDelta.textContent=`Δ €${Math.abs(diff).toFixed(2)}`;
-  }else if(diff>0){
-    verdict.classList.add("verdict-ev");
-    verdictText.textContent="EV is cheaper";
-    verdictDelta.textContent=`Δ €${diff.toFixed(2)}`;
-  }else{
-    verdict.classList.add("verdict-petrol");
-    verdictText.textContent="Petrol is cheaper";
-    verdictDelta.textContent=`Δ €${Math.abs(diff).toFixed(2)}`;
-  }
-
-  lastUpdated.textContent=new Date().toLocaleTimeString();
+function setLang(l){
+  lang=l;
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.remove("active"));
+  event.target.classList.add("active");
+  $("title").textContent=t[l].title;
+  $("lblVehicle").textContent=t[l].vehicle;
+  $("lblDistance").textContent=t[l].distance;
+  $("lblPetrol").textContent=t[l].petrol;
+  $("lblMixed").textContent=t[l].mixed;
+  calc();
 }
 
-function resetAll(){
-  petrolPrice.value=2.10;
-  petrolCons.value=7.0;
-  evCons.value=18.0;
-  elecPrice.value=0.35;
-  phev.value=0;
-  calculate();
+function updateTemp(){
+  $("tempVal").textContent=$("temp").value+"°C";
+  calc();
 }
 
-qs("updateBtn").onclick=calculate;
-qs("resetBtn").onclick=resetAll;
-resetAll();
+function calc(){
+  const [name,pc,ec,range]=vehicles[vehicle.value];
+  const dist=+$("distance").value;
+  const temp=+$("temp").value;
+  const pp=+$("petrolPrice").value;
+  const ep=+$("elecPrice").value;
+
+  let loss= temp>=10?0 : Math.min(0.3,(10-temp)*0.03);
+  const effRange=range*(1-loss);
+
+  const evKm=Math.min(dist,effRange);
+  const petrolKm=dist-evKm;
+
+  const petrolCost=pp*pc*(dist/100);
+  const mixed=(evKm/100)*(ec*ep)+(petrolKm/100)*(pc*pp);
+
+  $("petrolCost").textContent="€"+petrolCost.toFixed(2);
+  $("mixedCost").textContent="€"+mixed.toFixed(2);
+  $("breakEven").textContent="Break-even €"+(petrolCost/ec).toFixed(3)+"/kWh";
+
+  $("barEV").style.width=(evKm/dist*100)+"%";
+  $("barPetrol").style.width=(petrolKm/dist*100)+"%";
+  $("evLabel").textContent=`EV ${evKm.toFixed(0)} km`;
+  $("petrolLabel").textContent=`Petrol ${petrolKm.toFixed(0)} km`;
+
+  const diff=petrolCost-mixed;
+  $("verdict").className="verdict "+(diff>0?"ev":"petrol");
+  $("verdict").textContent=(diff>0?t[lang].cheaper:t[lang].petrolCheaper)+" €"+Math.abs(diff).toFixed(2);
+}
+
+updateTemp();
 </script>
 </body>
 </html>
-
