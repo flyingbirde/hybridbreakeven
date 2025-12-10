@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Stylish EV vs Petrol — PHEV presets</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+:root{
+  --bg:#0b1020; --card:rgba(255,255,255,0.06); --muted:#a6acd8;
+  --text:#e9ecff; --accent1:#7cf5c2; --accent2:#6bbcff; --danger:#ff6b6b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,system-ui,Arial,sans-serif;
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, #14204a22, transparent 40%),
+    radial-gradient(600px 400px at 100% 100%, #072f2725, transparent 30%),
+    var(--bg);
+  color:var(--text);
+}
+.card{
+  width:100%; max-width:640px; border-radius:18px; padding:26px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);
+  box-shadow:0 30px 80px rgba(0,0,0,0.45);
+}
+.header{display:flex; align-items:center; gap:12px;}
+.logo{
+  width:48px; height:48px; border-radius:10px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  box-shadow:0 8px 30px rgba(124,245,194,0.12);
+  display:flex; align-items:center; justify-content:center; font-weight:800; color:#052116;
+}
+.title{margin:0;}
+.subtitle{color:var(--muted); font-size:13px; margin-top:6px;}
+.grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:18px;}
+.full{grid-column:1/-1}
+label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+input[type="number"]{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);
+  background:rgba(0,0,0,0.35); color:var(--text); font-size:14px; outline:none;
+}
+input[type="number"]:focus{ box-shadow:0 0 0 3px rgba(124,245,194,0.12); border-color:var(--accent1); }
+select{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);
+  background:rgba(0,0,0,0.35); color:var(--text); font-size:14px; outline:none;}
+.rangeWrap{ display:flex; gap:10px; align-items:center; }
+input[type="range"]{
+  -webkit-appearance:none; appearance:none; height:8px; border-radius:999px; flex:1;
+  background: linear-gradient(90deg,var(--accent1),var(--accent2));
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:#fff;
+  border:2px solid var(--accent1); box-shadow:0 8px 20px rgba(0,0,0,0.35);
+}
+button{
+  width:100%; padding:12px 14px; margin-top:18px; border-radius:12px; font-weight:700; font-size:15px;
+  color:#052116; background:linear-gradient(135deg,var(--accent1),var(--accent2)); border:none;
+  cursor:pointer; box-shadow:0 10px 30px rgba(124,245,194,0.12);
+}
+button:hover{ transform:translateY(-2px); }
+.result{
+  margin-top:18px; padding:16px; border-radius:12px; background:rgba(0,0,0,0.36); border:1px solid rgba(255,255,255,0.04);
+  font-size:15px;
+}
+.line{display:flex; justify-content:space-between; margin-bottom:8px;}
+.sep{height:1px; background: rgba(255,255,255,0.04); margin:10px 0; border-radius:2px;}
+.good{color:var(--accent1); font-weight:700}
+.bad{color:var(--danger); font-weight:700}
+.note{color:var(--muted); font-size:13px; margin-top:8px}
+@media (max-width:640px){ .grid{grid-template-columns:1fr; } .header{flex-direction:row} }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="logo">EV</div>
+    <div>
+      <h2 class="title">EV vs Petrol — PHEV presets</h2>
+      <div class="subtitle">Choose a PHEV to auto-fill consumption values, then press Update</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="full">
+      <label for="phevSelect">Popular PHEV models</label>
+      <select id="phevSelect">
+        <option value="">— Select a model —</option>
+        <!-- options populated by JS (keeps HTML tidy) -->
+      </select>
+    </div>
+
+    <div>
+      <label for="petrolPrice">Petrol price (€ / litre)</label>
+      <div class="rangeWrap">
+        <input id="petrolPrice" type="number" step="0.01" value="2.10">
+        <input id="petrolPriceSlider" type="range" min="1.0" max="3.5" step="0.01" value="2.10">
+      </div>
+    </div>
+
+    <div>
+      <label for="petrolConsumption">Petrol consumption (L / 100 km)</label>
+      <div class="rangeWrap">
+        <input id="petrolConsumption" type="number" step="0.1" value="7.0">
+        <input id="petrolConsumptionSlider" type="range" min="3" max="15" step="0.1" value="7.0">
+      </div>
+    </div>
+
+    <div>
+      <label for="evConsumption">EV consumption (kWh / 100 km)</label>
+      <div class="rangeWrap">
+        <input id="evConsumption" type="number" step="0.1" value="18.0">
+        <input id="evConsumptionSlider" type="range" min="8" max="30" step="0.1" value="18.0">
+      </div>
+    </div>
+
+    <div>
+      <label for="electricityPrice">Electricity price (€ / kWh)</label>
+      <div class="rangeWrap">
+        <input id="electricityPrice" type="number" step="0.01" value="0.35">
+        <input id="electricityPriceSlider" type="range" min="0.05" max="1.50" step="0.01" value="0.35">
+      </div>
+    </div>
+
+    <div class="full">
+      <button id="updateBtn">Update</button>
+      <div class="result" id="result">Press <strong>Update</strong> to calculate.</div>
+      <div class="note">Tip: select a model to auto-fill the consumption numbers, then tweak sliders or numbers and press Update.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- PHEV presets ----------
+  The dropdown is populated from this list.
+  Each entry contains: display name, petrol L/100km, ev kWh/100km.
+  Values are reasonable defaults you can edit after selecting.
+*/
+const phevList = [
+  ["Lynk & Co 01 PHEV", 7.5, 17.5],
+  ["Volvo XC60 PHEV", 7.5, 18.0],
+  ["Ford Kuga PHEV", 6.8, 17.0],
+  ["Mitsubishi Outlander PHEV", 7.0, 20.0],
+  ["Hyundai Tucson PHEV", 6.5, 16.0],
+  ["Kia Sportage PHEV", 6.8, 16.5],
+  ["BMW 330e", 6.0, 15.0],
+  ["BMW X5 xDrive45e", 8.5, 22.0],
+  ["Mercedes C300e (C-class PHEV)", 6.5, 16.0],
+  ["Toyota RAV4 PHEV", 6.2, 18.0],
+  ["VW Golf GTE / Golf PHEV", 5.9, 14.0]
+];
+
+/* ---------- DOM references ---------- */
+const phevSelect = document.getElementById('phevSelect');
+const petrolPrice = document.getElementById('petrolPrice');
+const petrolPriceSlider = document.getElementById('petrolPriceSlider');
+const petrolConsumption = document.getElementById('petrolConsumption');
+const petrolConsumptionSlider = document.getElementById('petrolConsumptionSlider');
+const evConsumption = document.getElementById('evConsumption');
+const evConsumptionSlider = document.getElementById('evConsumptionSlider');
+const electricityPrice = document.getElementById('electricityPrice');
+const electricityPriceSlider = document.getElementById('electricityPriceSlider');
+const updateBtn = document.getElementById('updateBtn');
+const resultDiv = document.getElementById('result');
+
+/* Populate dropdown */
+(function populateDropdown(){
+  phevList.forEach((p, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = p[0];
+    phevSelect.appendChild(opt);
+  });
+})();
+
+/* Safe number parser */
+function toNum(v){ const n = Number(v); return Number.isFinite(n) ? n : 0; }
+
+/* ---------- syncing helpers ----------
+   - slider -> number (immediate)
+   - number -> slider (when clicking Update we sync to avoid flaky input events)
+*/
+function bindPair(numberEl, rangeEl){
+  // slider -> number (live)
+  rangeEl.addEventListener('input', () => {
+    numberEl.value = rangeEl.value;
+  });
+  // number -> slider (clamp & reflect when user types then blurs)
+  numberEl.addEventListener('change', () => {
+    let v = toNum(numberEl.value);
+    const min = parseFloat(rangeEl.min);
+    const max = parseFloat(rangeEl.max);
+    if (v < min) v = min;
+    if (v > max) v = max;
+    numberEl.value = v;
+    rangeEl.value = v;
+  });
+}
+bindPair(petrolPrice, petrolPriceSlider);
+bindPair(petrolConsumption, petrolConsumptionSlider);
+bindPair(evConsumption, evConsumptionSlider);
+bindPair(electricityPrice, electricityPriceSlider);
+
+/* When a PHEV model is selected, auto-fill petrol & ev consumption.
+   We also sync those values into sliders immediately.
+*/
+phevSelect.addEventListener('change', () => {
+  const idx = phevSelect.value;
+  if (idx === "") return;
+  const item = phevList[Number(idx)];
+  if (!item) return;
+  // item: [name, petrolLper100, evKwhPer100]
+  petrolConsumption.value = item[1].toFixed(1);
+  petrolConsumptionSlider.value = item[1];
+  evConsumption.value = item[2].toFixed(1);
+  evConsumptionSlider.value = item[2];
+  // optional: give user a friendly hint
+  resultDiv.innerHTML = `Selected <strong>${item[0]}</strong>. Values auto-filled — press <strong>Update</strong> to calculate.`;
+});
+
+/* Update/calculate function (runs when pressing Update) */
+function updateCalculation(){
+  // Ensure number inputs and sliders reflect each other
+  petrolPriceSlider.value = petrolPrice.value;
+  petrolConsumptionSlider.value = petrolConsumption.value;
+  evConsumptionSlider.value = evConsumption.value;
+  electricityPriceSlider.value = electricityPrice.value;
+
+  const pPrice = toNum(petrolPrice.value);     // €/l
+  const pCons  = toNum(petrolConsumption.value); // L/100km
+  const evCons = toNum(evConsumption.value);     // kWh/100km
+  const ePrice = toNum(electricityPrice.value);  // €/kWh
+
+  if (pPrice <= 0 || pCons <= 0 || evCons <= 0) {
+    resultDiv.textContent = 'Please enter positive values for petrol price, petrol consumption and EV consumption.';
+    return;
+  }
+
+  const petrol100 = pPrice * pCons; // €/100km
+  const ev100 = ePrice * evCons;    // €/100km
+  const breakEven = petrol100 / evCons; // €/kWh
+
+  let verdict = '';
+  if (ev100 < petrol100 - 0.005) {
+    verdict = `<div class="good">EV is cheaper by €${(petrol100 - ev100).toFixed(2)} / 100 km</div>`;
+  } else if (petrol100 < ev100 - 0.005) {
+    verdict = `<div class="bad">Petrol is cheaper by €${(ev100 - petrol100).toFixed(2)} / 100 km</div>`;
+  } else {
+    verdict = `<div>Costs are essentially equal (difference &lt; €0.01 / 100 km)</div>`;
+  }
+
+  resultDiv.innerHTML = `
+    <div class="line"><span><strong>Petrol</strong></span><span>€${petrol100.toFixed(2)} / 100 km</span></div>
+    <div class="line"><span><strong>EV</strong></span><span>€${ev100.toFixed(2)} / 100 km</span></div>
+    <div class="sep"></div>
+    <div class="line"><span><strong>Break-even</strong></span><span>€${breakEven.toFixed(3)} / kWh</span></div>
+    ${verdict}
+  `;
+}
+
+/* Hook update button */
+updateBtn.addEventListener('click', updateCalculation);
+
+/* Keep UI initial sliders synced to the number inputs on load */
+window.addEventListener('load', () => {
+  petrolPriceSlider.value = petrolPrice.value;
+  petrolConsumptionSlider.value = petrolConsumption.value;
+  evConsumptionSlider.value = evConsumption.value;
+  electricityPriceSlider.value = electricityPrice.value;
+});
+</script>
+</body>
+</html>
